@@ -29,10 +29,13 @@ npm run test
 - Github: [@clswhre](https://github.com/clswhre)
 - LinkedIn: [@Bohdan Kryzhov](https://linkedin.com/in/bohdan-kryzhov-a4895439a)
 
-👤 **N\_\_\_**
+👤 **ranon132**
 
-- Github: [@none](none)
-- LinkedIn: [@none](none)
+- Github: [@ranon132](https://github.com/ranon132)
+
+👤 **WayzoR**
+
+- Github: [@ryastik443-sketch](https://github.com/ryastik443-sketch)
 
 ## Show your support
 
