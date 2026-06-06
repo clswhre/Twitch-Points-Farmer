@@ -10,6 +10,13 @@
 
 ### 🏠 [Homepage](https://github.com/clswhre/Twitch-Points-Farmer)
 
+## Inspired by 
+  This extension was inspired by the original concept of [twitch-auto-points](https://github.com/Spring3/twitch-auto-points).
+  
+  (Planned) to add reward autoclaimer
+
+
+
 ## Install
 
 ```sh
