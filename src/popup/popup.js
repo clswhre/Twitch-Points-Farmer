@@ -1,3 +1,5 @@
+const browser = window.browser || chrome;
+
 document.addEventListener("DOMContentLoaded", () => {
     const loginStatus = document.getElementById("login-status");
     const twitchStatus = document.getElementById("twitch-status");
@@ -7,22 +9,31 @@ document.addEventListener("DOMContentLoaded", () => {
         yearContainer.textContent = new Date().getFullYear();
     }
 
-    browser.storage.local.get(["twitchLoggedIn", "twitchChannelPage"]).then((data) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const currentTab = tabs[0];
 
-        if (data.twitchLoggedIn) {
-            loginStatus.textContent = "Logged";
-            loginStatus.style.color = "green";
-        } else {
-            loginStatus.textContent = "Not logged";
-            loginStatus.style.color = "red";
-        }
-
-        if (data.twitchChannelPage) {
-            twitchStatus.textContent = "True";
-            twitchStatus.style.color = "green";
-        } else {
+        if (!currentTab?.url?.includes("twitch.tv")) {
+            loginStatus.textContent = "Not on Twitch";
+            loginStatus.style.color = "orange";
             twitchStatus.textContent = "False";
             twitchStatus.style.color = "red";
+            return;
         }
+
+        browser.tabs.sendMessage(currentTab.id, { action: "getStatus" }, (response) => {
+            if (browser.runtime.lastError || !response) {
+                loginStatus.textContent = "Error";
+                loginStatus.style.color = "red";
+                return;
+            }
+
+            const isLogged = response.twitchLoggedIn === true;
+            const isChannel = response.twitchChannelPage === true;
+
+            loginStatus.textContent = isLogged ? "Logged" : "Not logged";
+            loginStatus.style.color = isLogged ? "green" : "red";
+            twitchStatus.textContent = isChannel ? "True" : "False";
+            twitchStatus.style.color = isChannel ? "green" : "red";
+        });
     });
 });
