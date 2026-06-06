@@ -1,30 +1,47 @@
+const browser = window.browser || chrome;
+
 document.addEventListener("DOMContentLoaded", () => {
-    const statusElement = document.getElementById("login-status");
+    const loginStatus = document.getElementById("login-status");
+    const twitchStatus = document.getElementById("twitch-status");
 
-    browser.storage.local.get("twitchLoggedIn").then((data) => {
-        if (data.twitchLoggedIn === true) {
-            statusElement.textContent = "Logged";
-            statusElement.style.color = "green";
-        } else {
-            statusElement.textContent = "Not logged";
-            statusElement.style.color = "red";
+    console.log('Popup is loading...');
+
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const currentTab = tabs[0];
+        const url = currentTab.url;
+        
+        console.log('URL:', url);
+
+        if (!url.includes('twitch.tv')) {
+            console.log('Not on Twitch"');
+            loginStatus.textContent = "Not on Twitch";
+            loginStatus.style.color = "orange";
+            twitchStatus.textContent = "False";
+            twitchStatus.style.color = "red";
+            return;
         }
-    });
-});
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const statusElement = document.getElementById("twitch-status");
-
-        browser.storage.local.get("isChannelPage").then((data) => {
-            if (data.isChannelPage === true) {
-                statusElement.textContent = "True";
-                statusElement.style.color = "green";
-            } else {
-                statusElement.textContent = "False";
-                statusElement.style.color = "red";
+        browser.tabs.sendMessage(currentTab.id, { action: "getStatus" }, (response) => {
+            if (browser.runtime.lastError) {
+                console.error('Error in content.js:', browser.runtime.lastError);
+                loginStatus.textContent = "Error";
+                loginStatus.style.color = "red";
+                return;
             }
+
+            console.log('Received:', response);
+            
+            const isLogged = response.twitchLoggedIn === true;
+            const isChannel = response.twitchChannelPage === true;
+            
+            loginStatus.textContent = isLogged ? "Logged" : "Not logged";
+            loginStatus.style.color = isLogged ? "green" : "red";
+            
+            twitchStatus.textContent = isChannel ? "True" : "False";
+            twitchStatus.style.color = isChannel ? "green" : "red";
         });
     });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const yearContainer = document.getElementById('current-year');
