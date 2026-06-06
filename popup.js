@@ -12,16 +12,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const statusElement = document.getElementById("twitch-status");
+    document.addEventListener("DOMContentLoaded", () => {
+        const statusElement = document.getElementById("twitch-status");
 
-    browser.storage.local.get("isChannelPage").then((data) => {
-        if (data.isChannelPage === true) {
-            statusElement.textContent = "True";
-            statusElement.style.color = "green";
-        } else {
-            statusElement.textContent = "False";
-            statusElement.style.color = "red";
-        }
+        browser.storage.local.get("isChannelPage").then((data) => {
+            if (data.isChannelPage === true) {
+                statusElement.textContent = "True";
+                statusElement.style.color = "green";
+            } else {
+                statusElement.textContent = "False";
+                statusElement.style.color = "red";
+            }
+        });
     });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const yearContainer = document.getElementById('current-year');
+
+    if (yearContainer) {
+        yearContainer.textContent = new Date().getFullYear();
+    } else {
+        console.error('err');
+    }
 });
